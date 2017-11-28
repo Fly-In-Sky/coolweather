@@ -1,13 +1,15 @@
-package model;
+package db;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import model.City;
+import model.County;
+import model.Province;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import db.CoolWeatherOpenHelper;
 
 //这个类会把数据库的常用操作都封装起来,这是一个单例类
 
@@ -28,14 +30,14 @@ public class CoolWeatherDB {
 	
 	private CoolWeatherDB(Context context){
 		CoolWeatherOpenHelper dbHelper = new CoolWeatherOpenHelper(
-				context, DB_NAME,null,VERSION);
+				context, DB_NAME, null, VERSION);
 		db = dbHelper.getWritableDatabase();
 		
 	}
 	
 	//私有化以后可以通过，getinstance()方法获取CoolWeatherDB的实例
 	
-	public synchronized static CoolWeatherDB getInstance(Context context ){
+	public synchronized static CoolWeatherDB getInstance(Context context){
 		if (coolWeatherDB == null) {
 			coolWeatherDB = new CoolWeatherDB(context);
 		}
@@ -58,7 +60,8 @@ public class CoolWeatherDB {
 	//从数据库读取全国所有的省份信息
 	public List<Province> loadProvinces(){
 		List<Province> list = new ArrayList<Province>();
-		Cursor cursor = db.query("Province", null, null, null, null, null, null);
+		Cursor cursor = db
+				.query("Province", null, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				Province province = new Province();
